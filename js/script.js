@@ -17,7 +17,9 @@ let quotes = [
 {quote: 'We are all born mad. Some remain so.', source: 'Samuel Beckett', citation: 'Waiting for Godot', year: 1953}
 ];
 
-
+//This array contains 4 different colors, to be assigned to the createRandomColor function. This will draw a color at random to be
+//used in the timer function further below.
+let colors = ["white", "pink", "grey", "teal"]
 
 /*
 This function generates a random Number from 0 to one less than the length of the array and assigns it to its index value in that array.
@@ -29,6 +31,10 @@ let createRandomQuote = (arr) => {
   return arr[randomNumber];
 }
 
+let createRandomColor = (arr) => {
+    let randomColor = Math.floor(Math.random() * (arr.length))
+    return arr[randomColor]
+}
 
 /*This function calls the createRandomQuote function and assigns the returned quote object in a variable called quoteDisplay.
 It then builds HTML and other properties around it in order to display it in the browser, according to whether its properties
@@ -36,7 +42,7 @@ have the right kinds of values.
 */
 
 function printQuote(arr) {
-  quote = createRandomQuote(arr);
+  quote = createRandomQuote(quotes);
   let quoteDisplay =` <p class="quote"> ${quote.quote} </p>
                      <p class="source"> ${quote.source} `
   if (typeof(quote.citation) === "string") {
@@ -48,24 +54,28 @@ function printQuote(arr) {
   if (typeof(quote.tags) === "string") {
     quoteDisplay += `(<span class="tags"> ${quote.tags} </span>) `
   }
-return `${quoteDisplay}</p>`;
+quoteDisplay += `</p>`
+return document.getElementById('quote-box').innerHTML = quoteDisplay;
 }
+
+
+
+//need to also call the printQuotes(quote) function separately to assign to the document object in the event of refreshing the page or loading
+//it for the first time.
+document.getElementById('quote-box').innerHTML = printQuote(quotes);
 
 /* This function creates a timer that loads the HTML content created every time the printQuote
 function with quotes array is called. In doing so it creates date and time objects to keep track of seconds according
 to local time. It also sets the body  of the document object to transition from white to pink and back within the interval.
 This setInterval function is assigned to a variable reloadPage.
 */
-
-document.getElementById('quote-box').innerHTML = printQuote(quotes);
-
 var reloadPage = setInterval(myTimer, 5000);
 
 function myTimer() {
   var date = new Date();
   var time = date.toLocaleTimeString();
   var body = document.body;
-  body.style.backgroundColor = body.style.backgroundColor ==  "white" ? "pink" : "white";
+  body.style.backgroundColor = body.style.backgroundColor ==  createRandomColor(colors) ? createRandomColor(colors) : createRandomColor(colors)
   document.getElementById('quote-box').innerHTML = printQuote(quotes);
 }
 
